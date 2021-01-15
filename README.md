@@ -1,7 +1,7 @@
 # upload-file-local-db
 Upload .txt files to a SQLite local DB through a Python Flask Web App
 
-Unfortunately ran out of time. Got the high level end to end logic working (file upload, file saving, text parsing, saving to Transaction table in database) but in the end I got caught up working out some devil in the details (converting datetime to string, generating UUID for transaction ID, logic for duplicate entries to the customer / product tables etc). If I had more time I would have liked to complete those details and soon after that add logic to cleanse the data, as well as expand the DB to include a User model for Authentication.
+Unfortunately ran out of time. Got the high level end to end logic working (file upload, file saving, text parsing, saving to Transaction table in database) but in the end I got caught up working out some devil in the details (converting string to datetime, generating UUID for transaction ID, logic for duplicate entries to the customer / product tables etc). If I had more time I would have liked to complete those details and soon after that add logic to cleanse the data, as well as expand the DB to include a User model for Authentication.
 
 # Steps for Running
 Prerequisites:
