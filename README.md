@@ -4,7 +4,7 @@ Upload .txt files to a SQLite local DB through a Python Flask Web App
 
 # Steps for Running
 Prerequisites:
-	Python3
+	Python3,  <\br>
 	SQLite - https://www.sqlite.org/download.html
 
 Steps:

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import os, sys, re 
+import os, sys, re, uuid
+from datetime import datetime
 
 
 # Initialization 
@@ -18,19 +19,24 @@ class Transaction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+	purchase_status = db.Column(db.String(8))
 	purchase_amount = db.Column(db.Integer)
+	date_time = db.Column(db.DateTime, default=datetime.utcnow)
 
 	def __repr__(self):
 		return 'Transaction id %r ' %self.id
 
 class Customer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.String(80), primary_key=True)
+	first_name = db.Column(db.String(20))
+	last_name = db.Column(db.String(25))
+	street_address = db.Column(db.String(40))
+	state= db.Column(db.String(15))
+	zip_code = db.Column(db.String(12))
 
 class Product(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(80))
-
 
 
 
@@ -46,22 +52,8 @@ def receive_file():
 	file = request.files['input-file']
 	file.save(current_path + "/files/" + file.filename)
 	save_file_to_db(file.filename)
-
 	return file.filename
 
-
-# Sample data insertion
-@app.route('/insertDB')
-def insert():
-	transaction = Transaction(id=1234, customer_id=1, product_id=100, purchase_amount=321.2)
-	customer = Customer(id=1, first_name='john')
-	product = Product(id=100, name='toaster')
-	db.session.add(transaction)
-	db.session.add(customer)
-	db.session.add(product)
-	db.session.commit()
-
-	return 'Data Insert Successful'
 
 @app.route('/data')
 def display_data():
@@ -74,6 +66,24 @@ def save_file_to_db(filename):
 	lines = file.readlines()
 	for line in lines:
 		split = line.split("\t")
-		for term in split:
-			app.logger.error(term)
+		customer_id=split[0]
+		customer_first_name=split[1]
+		customer_last_name=split[2]
+		customer_street_address=split[3]
+		customer_state=split[4]
+		customer_zip=split[5]
+		purchase_status=split[6]
+		product_id=split[7]
+		product_name=split[8]
+		purchase_amount=split[9]
+		date_time=split[10]
+
+		transaction = Transaction(id=uuid.uuid1(), customer_id=customer_id, product_id=product_id, purchase_status=purchase_status,purchase_amount=purchase_amount,date_time=date_time)
+		customer = Customer(id=customer_id, first_name=customer_first_name, last_name=customer_last_name,street_address=customer_street_address, state=customer_state, zip_code=customer_zip)
+		product = Product(id=product_id, name=product_name)
+
+		db.session.add(transaction)
+		db.session.add(customer)
+		db.session.add(product)
+		db.session.commit()
 	return "True"
