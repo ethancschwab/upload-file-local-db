@@ -3,8 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+database.db
+
+
 # C extensions
 *.so
+*.db
 
 # Distribution / packaging
 .Python

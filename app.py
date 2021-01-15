@@ -11,15 +11,32 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file_path
 db = SQLAlchemy(app)
 
 class Transaction(db.Model):
-	transaction_id = db.Column(db.Integer, primary_key=True)
-	customer_id = db.Column(db.Integer)
-	product_id = db.Column(db.Integer)
+	id = db.Column(db.Integer, primary_key=True)
+	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	purchase_amount = db.Column(db.Integer)
 
 class Customer(db.Model):
-	customer_id = db.Column(db.Integer, primary_key=True)
-	customer_firstname = db.Column(db.String(80), primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
+	first_name = db.Column(db.String(80), primary_key=True)
 
 class Product(db.Model):
-	product_id = db.Column(db.Integer, primary_key=True)
-	product_name = db.Column(db.String(80))
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(80))
+
+
+@app.route('/')
+def home():		
+	return "home page"
+
+@app.route('/insertDB')
+def insert():
+	transaction = Transaction(id=1234, customer_id=1, product_id=100, purchase_amount=321.2)
+	customer = Customer(id=1, first_name='john')
+	product = Product(id=100, name='toaster')
+	db.session.add(transaction)
+	db.session.add(customer)
+	db.session.add(product)
+	db.session.commit()
+
+	return 'it worked'
