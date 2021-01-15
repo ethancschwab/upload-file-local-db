@@ -1,0 +1,2 @@
+1	john	100	toaster	5.99
+2	emily	101	markers	10.43

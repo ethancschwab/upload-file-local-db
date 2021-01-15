@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 import os, sys 
 
@@ -30,7 +30,11 @@ class Product(db.Model):
 def home():		
 	return render_template('upload.html')
 
-
+@app.route('/upload')
+def receive_file():
+	file = request.files['input-file']
+	app.logger.error(file.filename)
+	return file.filename
 
 @app.route('/insertDB')
 def insert():
