@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import os, sys 
+import os, sys, re 
 
 
 # Initialization 
 app = Flask(__name__)
-db_file_path = os.path.abspath(os.getcwd()) + "/database.db"
+current_path = os.path.abspath(os.getcwd()) 
+db_file_path = current_path + "/database.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file_path
-app.config['UPLOAD_FOLDER'] = os.path.abspath(os.getcwd()) + "/files"
+app.config['UPLOAD_FOLDER'] = current_path + "/files"
 db = SQLAlchemy(app)
 
 
@@ -43,9 +44,9 @@ def home():
 @app.route('/upload', methods=['POST'])
 def receive_file():
 	file = request.files['input-file']
-	# open(file)
-	file.save(os.path.join(os.getcwd()) + "/files/" + file.filename)
-	# file.save(os.path.join(app.config['UPLOAD_FOLDER'])
+	file.save(current_path + "/files/" + file.filename)
+	save_file_to_db(file.filename)
+
 	return file.filename
 
 
@@ -60,8 +61,19 @@ def insert():
 	db.session.add(product)
 	db.session.commit()
 
-	return 'Data Insert Successfully'
+	return 'Data Insert Successful'
 
 @app.route('/data')
 def display_data():
 	return str(Transaction.query.first())
+
+@app.route('/readfile')
+def save_file_to_db(filename):
+	path = current_path + "/files/" + filename
+	file = open(path, 'r')
+	lines = file.readlines()
+	for line in lines:
+		split = line.split("\t")
+		for term in split:
+			app.logger.error(term)
+	return "True"

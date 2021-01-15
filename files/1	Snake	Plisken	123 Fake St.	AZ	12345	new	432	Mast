@@ -1,0 +1,5 @@
+1	Snake	Plisken	123 Fake St.	AZ	12345	new	432	Masthead	100.12	2007-04-05T14:30Z
+1	Snake	Plisken	123 Fake St.	AZ	12345	canceled	432	Masthead	100.12	2007-04-06T10:30Z
+2	Clark	Kent	456 Fake St.	CA	54321	new	431	Print Magazine	50.12	2007-04-07T10:30Z
+3	Johnny	Johnson	789 Not Real St.	OH	45321	new	431	Print Magazine	50.12	2007-04-08T10:30Z
+3	Johnny	Johnson	789 Not Real St.	OH	45321	canceled	431	Print Magazine	50.12	2007-04-08T11:30Z
