@@ -76,12 +76,12 @@ def save_file_to_db(filename):
 		# date_time=datetime.fromisoformat(split[10])	
 
 		transaction = Transaction(id=random.randint(1,200000), customer_id=customer_id, product_id=product_id, purchase_status=purchase_status,purchase_amount=purchase_amount)
-		customer = Customer(id=customer_id, first_name=customer_first_name, last_name=customer_last_name,street_address=customer_street_address, state=customer_state, zip_code=customer_zip)
-		product = Product(id=product_id, name=product_name)
+		# customer = Customer(id=customer_id, first_name=customer_first_name, last_name=customer_last_name,street_address=customer_street_address, state=customer_state, zip_code=customer_zip)
+		# product = Product(id=product_id, name=product_name)
 
 		db.session.add(transaction)
-		db.session.add(customer)
-		db.session.add(product)
+		# db.session.add(customer)
+		# db.session.add(product)
 		db.session.commit()
 	return "True"
 
