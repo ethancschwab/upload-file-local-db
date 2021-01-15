@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os, sys 
 
@@ -16,6 +16,7 @@ class Transaction(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	purchase_amount = db.Column(db.Integer)
 
+
 class Customer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(80), primary_key=True)
@@ -27,7 +28,9 @@ class Product(db.Model):
 
 @app.route('/')
 def home():		
-	return "home page"
+	return render_template('upload.html')
+
+
 
 @app.route('/insertDB')
 def insert():
