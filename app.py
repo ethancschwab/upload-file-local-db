@@ -16,6 +16,9 @@ class Transaction(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	purchase_amount = db.Column(db.Integer)
 
+	def __repr__(self):
+		return 'Transaction id %r ' %self.id
+
 
 class Customer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -30,7 +33,7 @@ class Product(db.Model):
 def home():		
 	return render_template('upload.html')
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 def receive_file():
 	file = request.files['input-file']
 	app.logger.error(file.filename)
@@ -47,3 +50,7 @@ def insert():
 	db.session.commit()
 
 	return 'it worked'
+
+@app.route('/data')
+def display_data():
+	return str(Transaction.query.first())
