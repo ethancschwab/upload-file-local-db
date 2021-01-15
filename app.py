@@ -2,14 +2,17 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 import os, sys 
 
-app = Flask(__name__)
 
+# Initialization 
+app = Flask(__name__)
 db_file_path = os.path.abspath(os.getcwd()) + "/database.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file_path
-
-
+app.config['UPLOAD_FOLDER'] = os.path.abspath(os.getcwd()) + "/files"
 db = SQLAlchemy(app)
 
+
+
+# Database Models
 class Transaction(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
@@ -18,7 +21,6 @@ class Transaction(db.Model):
 
 	def __repr__(self):
 		return 'Transaction id %r ' %self.id
-
 
 class Customer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -29,16 +31,25 @@ class Product(db.Model):
 	name = db.Column(db.String(80))
 
 
+
+
+#Web App Pages
 @app.route('/')
 def home():		
 	return render_template('upload.html')
 
+
+
 @app.route('/upload', methods=['POST'])
 def receive_file():
 	file = request.files['input-file']
-	app.logger.error(file.filename)
+	# open(file)
+	file.save(os.path.join(os.getcwd()) + "/files/" + file.filename)
+	# file.save(os.path.join(app.config['UPLOAD_FOLDER'])
 	return file.filename
 
+
+# Sample data insertion
 @app.route('/insertDB')
 def insert():
 	transaction = Transaction(id=1234, customer_id=1, product_id=100, purchase_amount=321.2)
@@ -49,7 +60,7 @@ def insert():
 	db.session.add(product)
 	db.session.commit()
 
-	return 'it worked'
+	return 'Data Insert Successfully'
 
 @app.route('/data')
 def display_data():
