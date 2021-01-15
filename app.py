@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import random
 import os, sys, re, uuid
 from datetime import datetime
 
@@ -21,7 +22,7 @@ class Transaction(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	purchase_status = db.Column(db.String(8))
 	purchase_amount = db.Column(db.Integer)
-	date_time = db.Column(db.DateTime, default=datetime.utcnow)
+	# date_time = db.Column(db.DateTime, default=datetime.utcnow)
 
 	def __repr__(self):
 		return 'Transaction id %r ' %self.id
@@ -46,18 +47,13 @@ def home():
 	return render_template('upload.html')
 
 
-
 @app.route('/upload', methods=['POST'])
 def receive_file():
 	file = request.files['input-file']
 	file.save(current_path + "/files/" + file.filename)
 	save_file_to_db(file.filename)
-	return file.filename
+	return file.filename + " uploaded successfully "
 
-
-@app.route('/data')
-def display_data():
-	return str(Transaction.query.first())
 
 @app.route('/readfile')
 def save_file_to_db(filename):
@@ -76,9 +72,10 @@ def save_file_to_db(filename):
 		product_id=split[7]
 		product_name=split[8]
 		purchase_amount=split[9]
-		date_time=split[10]
+		# date_time=datetime.strptime(split[10], '%Y-%m-%d %H:%M:%S.%f')
+		# date_time=datetime.fromisoformat(split[10])	
 
-		transaction = Transaction(id=uuid.uuid1(), customer_id=customer_id, product_id=product_id, purchase_status=purchase_status,purchase_amount=purchase_amount,date_time=date_time)
+		transaction = Transaction(id=random.randint(1,200000), customer_id=customer_id, product_id=product_id, purchase_status=purchase_status,purchase_amount=purchase_amount)
 		customer = Customer(id=customer_id, first_name=customer_first_name, last_name=customer_last_name,street_address=customer_street_address, state=customer_state, zip_code=customer_zip)
 		product = Product(id=product_id, name=product_name)
 
@@ -87,3 +84,11 @@ def save_file_to_db(filename):
 		db.session.add(product)
 		db.session.commit()
 	return "True"
+
+
+
+
+
+@app.route('/data')
+def display_data():
+	return str(Transaction.query.first())
